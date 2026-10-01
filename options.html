@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>&#x05D4;&#x05D2;&#x05D3;&#x05E8;&#x05D5;&#x05EA; JTech Translator</title>
+<style>
+  :root { --accent: #2563eb; --bg: #fff; --fg: #1f2937; --muted: #6b7280; --border: #e5e7eb; --card: #f9fafb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111827; --fg: #f3f4f6; --muted: #9ca3af; --border: #374151; --card: #1f2937; }
+  }
+  body { font-family: "Segoe UI", Arial, sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 16px; min-width: 380px; max-width: 640px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+  fieldset { border: 1px solid var(--border); border-radius: 8px; background: var(--card); margin: 0 0 12px; padding: 10px 14px; }
+  legend { font-weight: 600; padding: 0 6px; }
+  label.opt { display: block; margin: 6px 0; cursor: pointer; }
+  .hint { color: var(--muted); font-size: 12px; margin: 2px 24px 6px 0; }
+  .field { margin: 8px 0; }
+  .field label { display: block; font-size: 13px; margin-bottom: 3px; }
+  input[type=text], input[type=password], select, textarea {
+    width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit;
+  }
+  input[type=password], input.ltr, select.ltr, textarea { direction: ltr; text-align: left; }
+  textarea { height: 140px; font-family: Consolas, monospace; font-size: 12px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  button { background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 8px 18px; font: inherit; cursor: pointer; }
+  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 4px 10px; font-size: 12px; }
+  #status { color: #16a34a; font-size: 13px; }
+  .engine-box[hidden] { display: none; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <h1>JTech Translator</h1>
+  <p class="sub">&#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD; &#x05D7;&#x05DB;&#x05DD; &#x05DC;&#x05E2;&#x05D1;&#x05E8;&#x05D9;&#x05EA; &#x05E9;&#x05DC; &#x05E4;&#x05D5;&#x05E1;&#x05D8;&#x05D9;&#x05DD; &#x05D1;-jtechforums.org</p>
+
+  <fieldset>
+    <legend>&#x05DE;&#x05E0;&#x05D5;&#x05E2; &#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD;</legend>
+    <label class="opt"><input type="radio" name="engine" value="google"> Google Translate – &#x05D7;&#x05D9;&#x05E0;&#x05DE;&#x05D9;, &#x05D1;&#x05DC;&#x05D9; &#x05DE;&#x05E4;&#x05EA;&#x05D7;</label>
+    <div class="hint">&#x05DE;&#x05D4;&#x05D9;&#x05E8;. &#x05E9;&#x05D5;&#x05DE;&#x05E8; &#x05DE;&#x05D5;&#x05E0;&#x05D7;&#x05D9;&#x05DD; &#x05D8;&#x05DB;&#x05E0;&#x05D9;&#x05D9;&#x05DD; &#x05D1;&#x05D0;&#x05E0;&#x05D2;&#x05DC;&#x05D9;&#x05EA;, &#x05D0;&#x05D1;&#x05DC; &#x05D4;&#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD; &#x05E4;&#x05D7;&#x05D5;&#x05EA; &#x05D8;&#x05D1;&#x05E2;&#x05D9;.</div>
+    <label class="opt"><input type="radio" name="engine" value="gemini"> Gemini – &#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD; &#x05D7;&#x05DB;&#x05DD; (&#x05D9;&#x05E9; &#x05DE;&#x05E4;&#x05EA;&#x05D7; &#x05D7;&#x05D9;&#x05E0;&#x05DE;&#x05D9;)</label>
+    <div class="hint">&#x05DE;&#x05D1;&#x05D9;&#x05DF; &#x05D4;&#x05E7;&#x05E9;&#x05E8; &#x05D5;&#x05E1;&#x05DC;&#x05E0;&#x05D2; &#x05D5;&#x05DE;&#x05EA;&#x05E8;&#x05D2;&#x05DD; &#x05DC;&#x05E2;&#x05D1;&#x05E8;&#x05D9;&#x05EA; &#x05D8;&#x05D1;&#x05E2;&#x05D9;&#x05EA;. &#x05DE;&#x05E4;&#x05EA;&#x05D7; &#x05D7;&#x05D9;&#x05E0;&#x05DE;&#x05D9; &#x05DE;-<a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>.</div>
+    <label class="opt"><input type="radio" name="engine" value="claude"> Claude – &#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD; &#x05D7;&#x05DB;&#x05DD; (&#x05D1;&#x05EA;&#x05E9;&#x05DC;&#x05D5;&#x05DD;)</label>
+    <div class="hint">&#x05D0;&#x05D9;&#x05DB;&#x05D5;&#x05EA; &#x05D4;&#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD; &#x05D4;&#x05D2;&#x05D1;&#x05D5;&#x05D4;&#x05D4; &#x05D1;&#x05D9;&#x05D5;&#x05EA;&#x05E8;. &#x05DE;&#x05E4;&#x05EA;&#x05D7; &#x05DE;-<a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a>.</div>
+
+    <div class="engine-box" id="box-gemini">
+      <div class="field"><label>&#x05DE;&#x05E4;&#x05EA;&#x05D7; API &#x05E9;&#x05DC; Gemini</label><input type="password" id="geminiKey" placeholder="AIza..."></div>
+      <div class="field"><label>&#x05DE;&#x05D5;&#x05D3;&#x05DC;</label><input type="text" class="ltr" id="geminiModel"></div>
+    </div>
+    <div class="engine-box" id="box-claude">
+      <div class="field"><label>&#x05DE;&#x05E4;&#x05EA;&#x05D7; API &#x05E9;&#x05DC; Claude</label><input type="password" id="claudeKey" placeholder="sk-ant-..."></div>
+      <div class="field"><label>&#x05DE;&#x05D5;&#x05D3;&#x05DC;</label>
+        <select id="claudeModel" class="ltr">
+          <option value="claude-opus-5-5">Claude Opus 5.5 (best quality)</option>
+          <option value="claude-sonnet-5-5">Claude Sonnet 5.5 (cheaper)</option>
+          <option value="claude-haiku-4-5">Claude Haiku 4.5 (cheapest, fastest)</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>&#x05EA;&#x05E6;&#x05D5;&#x05D2;&#x05D4;</legend>
+    <label class="opt"><input type="radio" name="mode" value="replace"> &#x05DC;&#x05D4;&#x05D7;&#x05DC;&#x05D9;&#x05E3; &#x05D0;&#x05EA; &#x05D4;&#x05E4;&#x05D5;&#x05E1;&#x05D8; &#x05D4;&#x05DE;&#x05E7;&#x05D5;&#x05E8;&#x05D9; &#x05D1;&#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD;</label>
+    <label class="opt"><input type="radio" name="mode" value="below"> &#x05DC;&#x05D4;&#x05E6;&#x05D9;&#x05D2; &#x05D0;&#x05EA; &#x05D4;&#x05EA;&#x05E8;&#x05D2;&#x05D5;&#x05DD; &#x05DE;&#x05EA;&#x05D7;&#x05EA; &#x05DC;&#x05DE;&#x05E7;&#x05D5;&#x05E8;</label>
+    <label class="opt"><input type="checkbox" id="auto"> &#x05DC;&#x05EA;&#x05E8;&#x05D2;&#x05DD; &#x05D0;&#x05D5;&#x05D8;&#x05D5;&#x05DE;&#x05D8;&#x05D9;&#x05EA; &#x05DB;&#x05DC; &#x05E4;&#x05D5;&#x05E1;&#x05D8; (&#x05D1;&#x05DC;&#x05D9; &#x05DC;&#x05DC;&#x05D7;&#x05D5;&#x05E5;)</label>
+  </fieldset>
+
+  <fieldset>
+    <legend>&#x05DE;&#x05D9;&#x05DC;&#x05D9;&#x05DD; &#x05E9;&#x05EA;&#x05DE;&#x05D9;&#x05D3; &#x05D9;&#x05D9;&#x05E9;&#x05D0;&#x05E8;&#x05D5; &#x05D1;&#x05D0;&#x05E0;&#x05D2;&#x05DC;&#x05D9;&#x05EA;</legend>
+    <div class="hint" style="margin-right:0">&#x05DE;&#x05D9;&#x05DC;&#x05D4; &#x05D0;&#x05D5; &#x05D1;&#x05D9;&#x05D8;&#x05D5;&#x05D9; &#x05D1;&#x05DB;&#x05DC; &#x05E9;&#x05D5;&#x05E8;&#x05D4;. &#x05E9;&#x05DE;&#x05D5;&#x05EA; &#x05DE;&#x05D5;&#x05E6;&#x05E8;&#x05D9;&#x05DD;, &#x05DE;&#x05D5;&#x05E0;&#x05D7;&#x05D9;&#x05DD; &#x05D8;&#x05DB;&#x05E0;&#x05D9;&#x05D9;&#x05DD; &#x05D5;&#x05DB;&#x05D5;'.</div>
+    <textarea id="terms" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:6px"><button type="button" class="secondary" id="reset">&#x05E9;&#x05D7;&#x05D6;&#x05E8; &#x05E8;&#x05E9;&#x05D9;&#x05DE;&#x05EA; &#x05D1;&#x05E8;&#x05D9;&#x05E8;&#x05EA; &#x05DE;&#x05D7;&#x05D3;&#x05DC;</button></div>
+  </fieldset>
+
+  <div class="row">
+    <button id="save">&#x05E9;&#x05DE;&#x05D5;&#x05E8;</button>
+    <span id="status"></span>
+  </div>
+
+<script src="glossary.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

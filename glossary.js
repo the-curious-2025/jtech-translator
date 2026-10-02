@@ -6,7 +6,7 @@ const JTT_DEFAULT_TERMS = [
   'Android', 'iPhone', 'iOS', 'Windows', 'Linux', 'macOS', 'Chrome', 'Chromebook',
   'Google', 'Gmail', 'Google Play', 'Play Store', 'App Store', 'Google Maps', 'Gboard',
   'WhatsApp', 'Telegram', 'Waze', 'YouTube', 'Spotify', 'Uber', 'Lyft', 'Zelle', 'Venmo',
-  'ChatGPT', 'Claude', 'Gemini', 'GitHub', 'XDA', 'Discourse', 'JTech', 'JTech Forums',
+  'ChatGPT', 'Claude', 'Claude Code', 'Gemini', 'GitHub', 'XDA', 'Discourse', 'JTech', 'JTech Forums',
   'Samsung', 'Kyocera', 'Nokia', 'Sonim', 'Xiaomi', 'Qin', 'Unihertz', 'Light Phone', 'Duoqin',
   'Mediatek', 'MTK', 'Qualcomm', 'Snapdragon', 'Unisoc',
   // Filters

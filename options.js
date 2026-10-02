@@ -11,15 +11,18 @@ const defaultTerms = JTT_DEFAULT_TERMS.join('\n');
 function render() {
   const engine = checked('engine');
   $('engine-note').textContent = ENGINE_NOTES[engine];
-  $('box-gemini').hidden = engine !== 'gemini';
-  $('box-claude').hidden = engine !== 'claude';
+  const used = [engine, checked('composeEngine')];
+  $('box-gemini').hidden = !used.includes('gemini');
+  $('box-claude').hidden = !used.includes('claude');
+  $('keys').hidden = !used.includes('gemini') && !used.includes('claude');
   $('count').textContent = ` (${$('terms').value.split('\n').filter(t => t.trim()).length})`;
 }
 
 async function load() {
   const s = await jttLoadSettings();
-  (document.querySelector(`input[name=engine][value="${s.engine}"]`) || document.querySelector('input[name=engine]')).checked = true;
-  (document.querySelector(`input[name=mode][value="${s.mode}"]`) || document.querySelector('input[name=mode]')).checked = true;
+  for (const name of ['engine', 'composeEngine', 'mode']) {
+    (document.querySelector(`input[name=${name}][value="${s[name]}"]`) || document.querySelector(`input[name=${name}]`)).checked = true;
+  }
   $('geminiKey').value = s.geminiKey;
   $('geminiModel').value = s.geminiModel;
   $('claudeKey').value = s.claudeKey;
@@ -36,9 +39,10 @@ async function save() {
   try {
     await jttSaveSettings({
       engine: checked('engine'),
+      composeEngine: checked('composeEngine'),
       mode: checked('mode'),
       geminiKey: $('geminiKey').value.trim(),
-      geminiModel: $('geminiModel').value.trim() || JTT_DEFAULTS.geminiModel,
+      geminiModel: $('geminiModel').value,
       claudeKey: $('claudeKey').value.trim(),
       claudeModel: $('claudeModel').value,
       auto: $('auto').checked,

@@ -45,7 +45,9 @@ Click the extension icon to open the settings.
 | **Gemini** | Free tier available | Smart: understands context and slang, natural Hebrew | API key from [Google AI Studio](https://aistudio.google.com/apikey) |
 | **Claude** | Paid, per use | Best quality | API key from the [Anthropic Console](https://console.anthropic.com/settings/keys) |
 
-The smart engines (Gemini and Claude) receive the post's HTML. Code, images, mentions and embeds are swapped out for placeholders before sending and restored afterwards, so they are never altered. Claude offers Opus 5.5 (default), Sonnet 5.5 or Haiku 4.5.
+The smart engines (Gemini and Claude) receive the post's HTML. Code, images, mentions and embeds are swapped out for placeholders before sending and restored afterwards, so they are never altered. Gemini offers 3.8 Flash (default) or 3.5 Flash-Lite, which is faster and has a higher free limit. Claude offers Opus 5.5 (default), Sonnet 5.5 or Haiku 4.5.
+
+The settings page has separate engines for **reading** (English → Hebrew) and **writing** (Hebrew → English). Writing defaults to Gemini, since Google Translate is weak at producing natural English replies.
 
 ### Settings
 

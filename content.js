@@ -220,8 +220,11 @@
   }
 
   function setupComposer() {
-    const toolbar = document.querySelector('#reply-control .d-editor-button-bar');
-    if (!toolbar || toolbar.querySelector('.jtt-compose-btn')) return;
+    const composer = document.querySelector('#reply-control');
+    if (!composer || composer.querySelector('.jtt-compose-btn')) return;
+    // Prefer the editor toolbar; fall back to the row with the Reply/Cancel buttons.
+    const toolbar = composer.querySelector('.d-editor-button-bar') || composer.querySelector('.save-or-cancel');
+    if (!toolbar) return;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'btn jtt-compose-btn';

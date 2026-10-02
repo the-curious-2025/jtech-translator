@@ -6,9 +6,10 @@
 // and never leave this computer.
 
 const JTT_DEFAULTS = {
-  engine: 'google',            // google | gemini | claude
+  engine: 'google',            // reading engine: google | gemini | claude
+  composeEngine: 'gemini',     // writing (Hebrew -> English) engine
   geminiKey: '',
-  geminiModel: 'gemini-2.5-flash',
+  geminiModel: 'gemini-3.8-flash',
   claudeKey: '',
   claudeModel: 'claude-opus-5-5',
   terms: '',                   // empty = JTT_DEFAULT_TERMS
@@ -17,6 +18,11 @@ const JTT_DEFAULTS = {
 };
 
 const JTT_LOCAL_KEYS = ['geminiKey', 'claudeKey'];
+
+// Models offered in the settings page. A saved model that is no longer offered
+// (e.g. gemini-2.5-flash, now closed to new API keys) falls back to the default.
+const JTT_GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash-lite'];
+const JTT_CLAUDE_MODELS = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-4-5'];
 
 // storage.sync limits each item to 8 KB, so the term list is split across items.
 const JTT_TERMS_CHUNK = 2000;
@@ -32,6 +38,8 @@ async function jttLoadSettings() {
   }
   s.terms = Array.from({ length: synced.termsChunks || 0 }, (_, i) => synced['terms_' + i] || '').join('');
   for (const k of JTT_LOCAL_KEYS) if (k in local) s[k] = local[k];
+  if (!JTT_GEMINI_MODELS.includes(s.geminiModel)) s.geminiModel = JTT_DEFAULTS.geminiModel;
+  if (!JTT_CLAUDE_MODELS.includes(s.claudeModel)) s.claudeModel = JTT_DEFAULTS.claudeModel;
   return s;
 }
 

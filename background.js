@@ -1,15 +1,4 @@
-importScripts('glossary.js');
-
-const DEFAULTS = {
-  engine: 'google',            // google | gemini | claude
-  geminiKey: '',
-  geminiModel: 'gemini-2.5-flash',
-  claudeKey: '',
-  claudeModel: 'claude-opus-5-5',
-  terms: '',                   // empty = JTT_DEFAULT_TERMS
-  mode: 'replace',             // replace | below
-  auto: false
-};
+importScripts('glossary.js', 'settings.js');
 
 // Keep API keys out of reach of content scripts: only the service worker and the
 // options page may read storage. Content scripts get public settings via messages.
@@ -19,10 +8,6 @@ function restrictStorage() {
 chrome.runtime.onInstalled.addListener(restrictStorage);
 chrome.runtime.onStartup.addListener(restrictStorage);
 restrictStorage();
-
-async function getSettings() {
-  return { ...DEFAULTS, ...(await chrome.storage.local.get(null)) };
-}
 
 function getTerms(s) {
   const custom = s.terms.split('\n').map(t => t.trim()).filter(Boolean);
@@ -240,7 +225,7 @@ function llm(s, system, user) {
 // ---------- Messaging ----------
 
 async function handle(msg) {
-  const s = await getSettings();
+  const s = await jttLoadSettings();
   switch (msg.type) {
     case 'getPublicSettings':
       return { engine: s.engine, mode: s.mode, auto: s.auto };

@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
   "name": "JTech Translator",
-  "version": "1.1.0",
+  "version": "1.2.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWnLgPxu7abWhwKEmimYmLS44ke/l5H8tjdPrulbjj7esiPR5esR9iRig0kWINmkY68hiGMhEC2Y0QTwZ/n6zz+ZkqvZKj36OOl64GiTKUd/u6B2bBCnNu1XYiGhE0sR3I21eOtaQ5GSHIwYhCD167htXkhIkd2yboDfR/b5GbzkDdNvkzlOII9LcMmviTfqLaTr1hhXP/Osh0+sKuIAyScnPGv1u6BcmCYf8JqRPREniupl4WaJ0VXRFc342eY6vtX+BS4eC6Dhc/FwcfMGYYzYP3J2PjtI/9CqKO0YyWhn53q7qf86K2jKR2nrAm/7aPkRFmBJHtNqqL5PRd9LqQIDAQAB",
   "description": "Smart English-to-Hebrew translation for JTech Forums posts: keeps tech terms in English and always displays right-to-left.",
   "permissions": ["storage"],
   "host_permissions": [

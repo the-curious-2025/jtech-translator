@@ -53,12 +53,22 @@ The smart engines (Gemini and Claude) receive the post's HTML. Code, images, men
 - **Auto-translate:** translate every post automatically, without clicking. With paid engines, keep in mind that every post costs an API call.
 - **Terms to keep in English:** one per line. Reset restores the built-in list.
 
+### Syncing between computers
+
+Your settings and term list are saved with `chrome.storage.sync`, so Chrome syncs them to every computer where you are signed into Chrome with the same Google account. Each person's data stays in their own account. To make this work:
+
+- Sign into Chrome and turn on sync for **Extensions** (`chrome://settings/syncSetup`).
+- Install the extension on each computer. The manifest includes a fixed `key`, so the extension gets the same ID everywhere, even when loaded unpacked, and Chrome treats every copy as the same extension.
+
+API keys are **not** synced. Enter them once on each computer.
+
 ## How it works
 
 ```
 content.js     injects buttons, extracts the post, renders the RTL result (runs on jtechforums.org)
 background.js  performs translation requests and holds API keys (service worker)
 glossary.js    default English-term list and Yeshivish → Hebrew map
+settings.js    load/save settings: preferences synced, API keys local only
 options.*      settings page
 ```
 
@@ -68,7 +78,7 @@ options.*      settings page
 ## Privacy & security
 
 - **What is sent where.** Post text is sent to the engine you choose (Google, Gemini or Claude) and nowhere else. There is no analytics, tracking or server of our own.
-- **API keys** are kept in `chrome.storage.local` on your computer, which is locked to the extension's own background and settings pages. The script running on the forum page never sees them. Keys are sent only in request headers to the matching API.
+- **API keys** are kept in `chrome.storage.local` on your computer and are never synced. Local storage is locked to the extension's own background and settings pages. The script running on the forum page never sees them. Keys are sent only in request headers to the matching API.
 - **Model output is untrusted.** HTML returned by an AI model goes through a strict tag/attribute allowlist. Scripts, event handlers, `javascript:` links, iframes and forms are removed. Text from Google is set as plain text, never as HTML.
 - **Minimal permissions:** `storage`, plus access to jtechforums.org and the three translation APIs.
 

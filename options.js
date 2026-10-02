@@ -1,8 +1,3 @@
-const DEFAULTS = {
-  engine: 'google', geminiKey: '', geminiModel: 'gemini-2.5-flash',
-  claudeKey: '', claudeModel: 'claude-opus-5-5', terms: '', mode: 'replace', auto: false
-};
-
 const ENGINE_NOTES = {
   google: '\u05d7\u05d9\u05e0\u05de\u05d9 \u05d5\u05de\u05d4\u05d9\u05e8, \u05d1\u05dc\u05d9 \u05de\u05e4\u05ea\u05d7. \u05d4\u05ea\u05e8\u05d2\u05d5\u05dd \u05de\u05d9\u05dc\u05d5\u05dc\u05d9 \u05d9\u05d5\u05ea\u05e8.',
   gemini: '\u05de\u05d1\u05d9\u05df \u05d4\u05e7\u05e9\u05e8 \u05d5\u05de\u05ea\u05e8\u05d2\u05dd \u05dc\u05e2\u05d1\u05e8\u05d9\u05ea \u05d8\u05d1\u05e2\u05d9\u05ea. \u05d9\u05e9 \u05de\u05e4\u05ea\u05d7 \u05d7\u05d9\u05e0\u05de\u05d9.',
@@ -22,7 +17,7 @@ function render() {
 }
 
 async function load() {
-  const s = { ...DEFAULTS, ...(await chrome.storage.local.get(null)) };
+  const s = await jttLoadSettings();
   (document.querySelector(`input[name=engine][value="${s.engine}"]`) || document.querySelector('input[name=engine]')).checked = true;
   (document.querySelector(`input[name=mode][value="${s.mode}"]`) || document.querySelector('input[name=mode]')).checked = true;
   $('geminiKey').value = s.geminiKey;
@@ -37,20 +32,28 @@ async function load() {
 let savedTimer;
 async function save() {
   const terms = $('terms').value.trim();
-  await chrome.storage.local.set({
-    engine: checked('engine'),
-    mode: checked('mode'),
-    geminiKey: $('geminiKey').value.trim(),
-    geminiModel: $('geminiModel').value.trim() || DEFAULTS.geminiModel,
-    claudeKey: $('claudeKey').value.trim(),
-    claudeModel: $('claudeModel').value,
-    auto: $('auto').checked,
-    // Store '' when unchanged so future default-list updates still apply.
-    terms: terms === defaultTerms ? '' : terms
-  });
-  $('saved').classList.add('show');
+  const saved = $('saved');
+  try {
+    await jttSaveSettings({
+      engine: checked('engine'),
+      mode: checked('mode'),
+      geminiKey: $('geminiKey').value.trim(),
+      geminiModel: $('geminiModel').value.trim() || JTT_DEFAULTS.geminiModel,
+      claudeKey: $('claudeKey').value.trim(),
+      claudeModel: $('claudeModel').value,
+      auto: $('auto').checked,
+      // Store '' when unchanged so future default-list updates still apply.
+      terms: terms === defaultTerms ? '' : terms
+    });
+    saved.textContent = '\u05e0\u05e9\u05de\u05e8';
+    saved.classList.remove('error');
+  } catch (e) {
+    saved.textContent = '\u05d4\u05e9\u05de\u05d9\u05e8\u05d4 \u05e0\u05db\u05e9\u05dc\u05d4: ' + e.message;
+    saved.classList.add('error');
+  }
+  saved.classList.add('show');
   clearTimeout(savedTimer);
-  savedTimer = setTimeout(() => $('saved').classList.remove('show'), 1200);
+  savedTimer = setTimeout(() => saved.classList.remove('show'), saved.classList.contains('error') ? 6000 : 1200);
 }
 
 // Save automatically: immediately for clicks, after a pause for typing.

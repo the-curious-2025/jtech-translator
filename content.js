@@ -111,7 +111,50 @@
     meta.className = 'jtt-meta';
     meta.textContent = `\u05ea\u05d5\u05e8\u05d2\u05dd \u05e2"\u05d9 ${ENGINE_LABEL[engine] || engine}`;
     box.appendChild(meta);
+    wireSpoilers(box, cooked);
     return box;
+  }
+
+  // ---------- Spoilers ----------
+  // Discourse attaches its spoiler click handler to each element, so copies in the
+  // translation lose it. Re-create the same behavior (mirrors Discourse's
+  // spoiler-alert plugin) and start each spoiler in the state the original is in.
+
+  const SPOILER = '.spoiler, .spoiled';
+  const SPOILER_INTERACTIVE = 'a, button, details, iframe, img.animated, input, select, textarea, video, audio, .lightbox';
+
+  const isBlurred = el => el.getAttribute('data-spoiler-state') === 'blurred' || el.classList.contains('spoiler-blurred');
+
+  function setSpoiler(el, blurred) {
+    el.classList.toggle('spoiler-blurred', blurred);
+    el.setAttribute('data-spoiler-state', blurred ? 'blurred' : 'revealed');
+    el.setAttribute('aria-expanded', String(!blurred));
+    if (blurred) { el.setAttribute('role', 'button'); el.setAttribute('tabindex', '0'); }
+    else el.removeAttribute('role');
+    for (const child of el.children) {
+      if (blurred) child.setAttribute('aria-hidden', 'true');
+      else child.removeAttribute('aria-hidden');
+    }
+  }
+
+  function toggleSpoiler(e, el) {
+    if (isBlurred(el)) {
+      setSpoiler(el, false);
+      e.preventDefault();
+    } else if (!e.defaultPrevented && !e.target.closest(SPOILER_INTERACTIVE) && String(window.getSelection()) === '') {
+      setSpoiler(el, true);
+    }
+  }
+
+  function wireSpoilers(box, cooked) {
+    const originals = [...cooked.querySelectorAll(SPOILER)];
+    box.querySelectorAll(SPOILER).forEach((el, i) => {
+      el.classList.remove('spoiler');
+      el.classList.add('spoiled');
+      setSpoiler(el, originals[i] ? isBlurred(originals[i]) : true);
+      el.addEventListener('click', e => toggleSpoiler(e, el));
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') toggleSpoiler(e, el); });
+    });
   }
 
   // ---------- Post buttons ----------

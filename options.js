@@ -28,6 +28,7 @@ async function load() {
   $('claudeKey').value = s.claudeKey;
   $('claudeModel').value = s.claudeModel;
   $('auto').checked = s.auto;
+  $('replyContext').checked = s.replyContext;
   $('terms').value = s.terms || defaultTerms;
   render();
 }
@@ -46,6 +47,7 @@ async function save() {
       claudeKey: $('claudeKey').value.trim(),
       claudeModel: $('claudeModel').value,
       auto: $('auto').checked,
+      replyContext: $('replyContext').checked,
       // Store '' when unchanged so future default-list updates still apply.
       terms: terms === defaultTerms ? '' : terms
     });

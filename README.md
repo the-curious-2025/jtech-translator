@@ -23,7 +23,7 @@ JTech Translator puts a **Translate** button under each post and does the job pr
 - **Always right-to-left.** The translated post is laid out RTL. Code blocks, commands and link previews stay LTR.
 - **Understands the community.** Yeshivish terms such as *Hashem*, *B"H*, *Shabbos* and *shaila* are written back in their original Hebrew form.
 - **Keeps the post's structure.** Quotes, lists, links, images, @mentions and code blocks are preserved.
-- **Helps you reply.** A **Translate to English** button in the reply editor turns a Hebrew draft into natural forum English while keeping Markdown, code and quotes intact. It can be undone with one click.
+- **Helps you reply.** A **Translate to English** button in the reply editor turns a Hebrew draft into natural forum English while keeping Markdown, code and quotes intact. It can be undone with one click. With Gemini or Claude, it also reads the post you're replying to, so the translation knows what "it" or "he" refers to.
 
 ## Installation
 
@@ -48,6 +48,12 @@ Click the extension icon to open the settings.
 The smart engines (Gemini and Claude) receive the post's HTML. Code, images, mentions and embeds are swapped out for placeholders before sending and restored afterwards, so they are never altered. Gemini offers 3.8 Flash (default) or 3.5 Flash-Lite, which is faster and has a higher free limit. Claude offers Opus 5.5 (default), Sonnet 5.5 or Haiku 4.5.
 
 The settings page has separate engines for **reading** (English → Hebrew) and **writing** (Hebrew → English). Writing defaults to Gemini, since Google Translate is weak at producing natural English replies.
+
+The free Gemini tier sometimes answers "high demand" or hits its rate limit. When that happens the extension waits a moment and tries again, then switches to the other Gemini model before showing an error.
+
+### Reply context
+
+When you translate a reply with Gemini or Claude, the extension also sends the post you're replying to (or the topic's first post, if you're replying to the topic), so the model understands what your draft is about. To keep API usage low, only that one post is sent. Quotes, images and code are removed and it's trimmed to about 1,400 characters, which is a few hundred tokens. You can turn this off in the settings.
 
 ### Settings
 

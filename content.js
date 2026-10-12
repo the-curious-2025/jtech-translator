@@ -21,7 +21,7 @@
   const ICON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>';
 
   // Only non-secret settings ever reach the page context; API keys stay in the background.
-  let settings = { engine: 'google', mode: 'replace', auto: false };
+  let settings = { engine: 'google', composeEngine: 'gemini', mode: 'replace', auto: false, replyContext: true };
   async function refreshSettings() {
     try {
       const { ok, ...s } = await send({ type: 'getPublicSettings' });
@@ -227,6 +227,72 @@
     if (settings.auto) toggle(cooked, bar);
   }
 
+  // ---------- Reply context ----------
+  // The writing engine gets the post being answered so it understands the draft.
+  // To keep API usage low, only one post is sent (the replied-to post, or the
+  // topic's first post), stripped of quotes, images and code, and trimmed.
+
+  const CONTEXT_HEAD = 900, CONTEXT_TAIL = 500;
+  const contextCache = new Map();
+
+  // Remember which Reply button was clicked, in case the composer header has no post link.
+  let clickedReply = null;   // { post: N } | { post: 1 } for the topic | null for a new topic
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('button, a.btn');
+    if (!btn || btn.closest('#reply-control')) return;
+    const article = btn.closest('article[data-post-id]');
+    if (article && /(?:^|[\s_-])reply(?:\s|$)/i.test(btn.className)) {
+      const n = Number(article.closest('[data-post-number]')?.dataset.postNumber || (article.id.match(/^post_(\d+)$/) || [])[1]);
+      if (n) clickedReply = { post: n };
+    } else if (btn.closest('#create-topic, .d-header')) {
+      clickedReply = null;
+    } else if (/\b(create|reply)\b/i.test(btn.className)) {
+      clickedReply = { post: 1 };
+    }
+  }, true);
+
+  function replyTarget() {
+    const composer = document.querySelector('#reply-control');
+    if (!composer || /composer-action-(createTopic|privateMessage|edit)/.test(composer.className)) return null;
+    const topic = Number((location.pathname.match(/^\/t\/(?:[^/]+\/)?(\d+)/) || [])[1]);
+    for (const a of composer.querySelectorAll('.reply-details a[href*="/t/"], .composer-action-title a[href*="/t/"]')) {
+      const m = new URL(a.href, location.href).pathname.match(/^\/t\/(?:[^/]+\/)?(\d+)(?:\/(\d+))?/);
+      if (m) return { topic: Number(m[1]), post: Number(m[2]) || 1 };
+    }
+    if (!topic) return null;
+    return clickedReply && { topic, post: clickedReply.post };
+  }
+
+  function cleanRaw(raw) {
+    let t = raw, prev;
+    do { prev = t; t = t.replace(/\[quote[^\]]*\](?:(?!\[quote)[\s\S])*?\[\/quote\]/gi, ''); } while (t !== prev);
+    t = t.replace(/```[\s\S]*?```/g, '[code]')
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+    if (t.length > CONTEXT_HEAD + CONTEXT_TAIL) t = t.slice(0, CONTEXT_HEAD) + '\n[...]\n' + t.slice(-CONTEXT_TAIL);
+    return t;
+  }
+
+  async function replyContext() {
+    if (!settings.replyContext || settings.composeEngine === 'google') return '';
+    const target = replyTarget();
+    if (!target) return '';
+    const key = `${target.topic}/${target.post}`;
+    if (!contextCache.has(key)) {
+      try {
+        const res = await fetch(`/raw/${target.topic}/${target.post}`, { credentials: 'same-origin' });
+        contextCache.set(key, res.ok ? cleanRaw(await res.text()) : '');
+      } catch { return ''; }
+    }
+    const body = contextCache.get(key);
+    if (!body) return '';
+    const title = (document.querySelector('#topic-title .fancy-title, .fancy-title')?.textContent || '').trim();
+    const what = target.post === 1 ? 'Replying to the topic. First post:' : `Replying to post #${target.post}:`;
+    return (title ? `Topic: ${title}\n` : '') + `${what}\n${body}`;
+  }
+
   // ---------- Composer: Hebrew -> English ----------
 
   function setTextarea(ta, value) {
@@ -249,7 +315,9 @@
     btn.disabled = true;
     btn.textContent = '\u05de\u05ea\u05e8\u05d2\u05dd...';
     try {
-      const { text } = await send({ type: 'translateCompose', text: ta.value });
+      await refreshSettings();
+      const context = await replyContext();
+      const { text } = await send({ type: 'translateCompose', text: ta.value, context });
       ta._jttOrig = ta.value;
       ta._jttTranslated = text;
       setTextarea(ta, text);

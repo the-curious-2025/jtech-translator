@@ -14,7 +14,8 @@ const JTT_DEFAULTS = {
   claudeModel: 'claude-opus-5-5',
   terms: '',                   // empty = JTT_DEFAULT_TERMS
   mode: 'replace',             // replace | below
-  auto: false
+  auto: false,
+  replyContext: true           // send the replied-to post along with a draft (LLM engines only)
 };
 
 const JTT_LOCAL_KEYS = ['geminiKey', 'claudeKey'];

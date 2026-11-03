@@ -37,7 +37,7 @@
       res = await chrome.runtime.sendMessage(msg);
     } catch (e) {
       // After the extension is updated or reloaded, open tabs keep the old script.
-      if (/context invalidated/i.test(e.message)) throw new Error('התוסף עודכן – רענן את הדף (F5)');
+      if (/context invalidated/i.test(e.message)) throw new Error('\u05d4\u05ea\u05d5\u05e1\u05e3 \u05e2\u05d5\u05d3\u05db\u05df \u2013 \u05e8\u05e2\u05e0\u05df \u05d0\u05ea \u05d4\u05d3\u05e3 (F5)');
       throw e;
     }
     if (!res?.ok) throw new Error(res?.error || '\u05e9\u05d2\u05d9\u05d0\u05d4 \u05dc\u05d0 \u05d9\u05d3\u05d5\u05e2\u05d4');

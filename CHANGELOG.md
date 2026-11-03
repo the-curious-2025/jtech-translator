@@ -2,7 +2,7 @@
 
 ## 1.5.1 - 2026-11-03
 
-- Fixed product names (like Keyphone or Wonder) sometimes vanishing from posts translated with Gemini or Claude, leaving a lone "ה-" behind.
+- Fixed product names (like Keyphone or Wonder) sometimes vanishing from posts translated with Gemini or Claude, leaving an empty gap where the name should be.
 - After the extension updates, an open forum tab now asks you to refresh the page instead of showing "Extension context invalidated".
 
 ## 1.5.0 - 2026-10-12

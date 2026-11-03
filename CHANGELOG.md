@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1 - 2026-11-03
+
+- Fixed product names (like Keyphone or Wonder) sometimes vanishing from posts translated with Gemini or Claude, leaving a lone "ה-" behind.
+- After the extension updates, an open forum tab now asks you to refresh the page instead of showing "Extension context invalidated".
+
 ## 1.5.0 - 2026-10-12
 
 - The reply translator now reads the post you're replying to (or the topic's first post), so the English comes out fitting the conversation. Only that one post is sent, trimmed and without quotes, images or code, to keep API usage low. Works with Gemini and Claude, and can be turned off in the settings.

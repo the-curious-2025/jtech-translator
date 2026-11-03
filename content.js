@@ -32,7 +32,14 @@
   refreshSettings().then(() => { ready = true; scan(); });
 
   async function send(msg) {
-    const res = await chrome.runtime.sendMessage(msg);
+    let res;
+    try {
+      res = await chrome.runtime.sendMessage(msg);
+    } catch (e) {
+      // After the extension is updated or reloaded, open tabs keep the old script.
+      if (/context invalidated/i.test(e.message)) throw new Error('התוסף עודכן – רענן את הדף (F5)');
+      throw e;
+    }
     if (!res?.ok) throw new Error(res?.error || '\u05e9\u05d2\u05d9\u05d0\u05d4 \u05dc\u05d0 \u05d9\u05d3\u05d5\u05e2\u05d4');
     return res;
   }
@@ -95,7 +102,8 @@
     root.querySelectorAll('x-keep').forEach(ph => {
       const i = Number(ph.getAttribute('data-i'));
       if (kept[i] && !used.has(i)) { used.add(i); ph.replaceWith(kept[i].cloneNode(true)); }
-      else ph.remove();
+      // A tag the model made up itself (e.g. <x-keep>Keyphone</x-keep>) keeps its text.
+      else ph.replaceWith(...ph.childNodes);
     });
     // If the model dropped frozen blocks (code, images), append them so nothing is lost.
     kept.forEach((el, i) => {
